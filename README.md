@@ -1,6 +1,6 @@
 # mcp-agent-ts
 
-![npm version](https://badge.fury.io/js/mcp-agent-typescript.svg)](https://badge.fury.io/js/mcp-agent-typescript)
+![npm version](https://badge.fury.io/js/mcp-agent-typescript.svg)
 [![npm downloads](https://img.shields.io/npm/dm/mcp-agent-typescript.svg)](https://www.npmjs.com/package/mcp-agent-typescript)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)

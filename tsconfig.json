@@ -19,14 +19,16 @@
     "isolatedModules": true,
     "noEmitOnError": false,
     "pretty": true,
-    "types": ["node", "jest"]
+    "types": ["node"]
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "tests",
+    "**/*.test.ts",
+    "**/*.spec.ts"
   ]
 }

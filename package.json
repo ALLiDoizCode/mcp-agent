@@ -1,32 +1,68 @@
 {
-  "scripts": {
-    "start": "tsx src/main.ts",
-    "dev": "tsx watch src/main.ts",
-    "build": "tsc",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch --passWithNoTests",
-    "test:coverage": "jest --coverage --passWithNoTests",
-    "example:basic": "tsx src/examples/run-basic.ts",
-    "lint": "eslint src/**/*.ts tests/**/*.ts",
-    "clean": "rm -rf dist/",
-    "prepublishOnly": "npm run clean && npm run build"
+  "name": "@ALLiDoizCode/mcp-agent",
+  "version": "1.0.0",
+  "description": "TypeScript implementation of Anthropic's MCP agent patterns with OpenAI integration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
   },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --passWithNoTests --config jest.config.js",
+    "test:coverage": "jest --coverage --passWithNoTests --config jest.config.js",
+    "clean": "rm -rf dist/",
+    "prepublishOnly": "npm run clean && npm run build && npm run test",
+    "dev": "tsx watch src/main.ts",
+    "example:basic": "tsx src/examples/run-basic.ts"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "mcp",
+    "typescript",
+    "anthropic",
+    "openai",
+    "claude",
+    "llm",
+    "function-calling",
+    "tools",
+    "memory"
+  ],
+  "author": "Jonathan Green dev.jonathan.green@gmail.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALLiDoizCode/mcp-agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ALLiDoizCode/mcp-agent/issues"
+  },
+  "homepage": "https://github.com/ALLiDoizCode/mcp-agent#readme",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
-    "chalk": "^5.4.1",
-    "dotenv": "^16.5.0",
-    "simple-git": "^3.28.0",
-    "zod": "^3.25.67",
-    "zod-to-json-schema": "^3.24.6"
+    "zod": "^3.22.4"
+  },
+  "peerDependencies": {
+    "dotenv": "^16.0.0",
+    "chalk": "^5.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.35.0",
-    "@typescript-eslint/parser": "^8.35.0",
-    "eslint": "^9.29.0",
-    "jest": "^30.0.3",
-    "ts-jest": "^29.4.0",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.3.0",
+    "@types/node": "^20.0.0",
+    "@types/jest": "^29.5.0",
+    "tsx": "^4.6.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "dotenv": "^16.0.0",
+    "chalk": "^5.0.0"
   }
 }

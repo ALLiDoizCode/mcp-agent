@@ -1,86 +1,161 @@
-# 🤖 MCP Agent (TypeScript)
+# mcp-agent-ts
 
-> TypeScript implementation of Anthropic's "Building Effective Agents" patterns using Model Context Protocol
-
-[![npm version](https://badge.fury.io/js/mcp-agent.svg)](https://badge.fury.io/js/mcp-agent)
+![npm version](https://badge.fury.io/js/mcp-agent-typescript.svg)](https://badge.fury.io/js/mcp-agent-typescript)
+[![npm downloads](https://img.shields.io/npm/dm/mcp-agent-typescript.svg)](https://www.npmjs.com/package/mcp-agent-typescript)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-## 🌟 What is MCP Agent TypeScript?
+TypeScript implementation of Anthropic's MCP (Model Context Protocol) agent patterns with OpenAI integration.
 
-This is the **TypeScript equivalent** of the popular [Python mcp-agent](https://github.com/lastmile-ai/mcp-agent) framework. It provides a complete implementation of Anthropic's proven agent patterns:
+## Features
 
-- ✅ **All Anthropic Patterns** - Prompt Chaining, Routing, Parallel, Orchestrator, Evaluator-Optimizer, Autonomous Agents
-- ✅ **Model Context Protocol** - Full MCP integration for tools and data sources
-- ✅ **Production Ready** - Proper testing, logging, error handling
-- ✅ **TypeScript First** - Full type safety throughout
-- ✅ **Multiple LLM Providers** - OpenAI, Anthropic, extensible
-- ✅ **Compatible** - Works with existing MCP ecosystem
+🤖 **Agent Orchestration** - Memory-enhanced agents with tool execution  
+🛠️ **8 Core Tools** - Filesystem, web, execution, and HTTP capabilities  
+🔌 **Multi-Provider** - OpenAI and Anthropic integration  
+🧠 **Memory Management** - Persistent conversation context  
+⚡ **Function Calling** - Real OpenAI function calling support  
+📝 **Type Safe** - Full TypeScript with comprehensive types  
+🧪 **Well Tested** - Complete Jest test suite  
 
-## 🚀 Quick Start
+## Installation
 
 ```bash
-npm install mcp-agent
+npm install mcp-agent-typescript
 ```
+
+## Quick Start
 
 ```typescript
-import { MCPApp, Agent, OpenAIAugmentedLLM } from 'mcp-agent';
+import { Agent, AugmentedLLM, OpenAIProvider } from 'mcp-agent-ts';
 
-// Create MCP app
-const app = new MCPApp({ name: "my-agent-app" });
-
-// Create an agent with MCP servers
-const agent = new Agent({
-  name: "finder",
-  instruction: "You can read files and fetch URLs. Help users find information.",
-  serverNames: ["filesystem", "fetch"]
+// Create provider
+const provider = new OpenAIProvider({
+  apiKey: process.env.OPENAI_API_KEY!,
+  model: 'gpt-4',
 });
 
-// Use the agent
-async function example() {
-  async with app.run() as mcpApp {
-    async with agent {
-      const llm = await agent.attachLLM(OpenAIAugmentedLLM);
-      const result = await llm.generateString("Show me what's in README.md");
-      console.log(result);
-    }
-  }
-}
+// Create enhanced LLM with memory
+const llm = new AugmentedLLM(provider);
+
+// Create agent with tools
+const agent = new Agent({
+  name: 'MyAgent',
+  instructions: 'You are a helpful assistant that can use tools.',
+  llm,
+  tools: ['read_file', 'write_file', 'web_search'],
+  maxIterations: 5,
+});
+
+// Run the agent
+const response = await agent.run('Create a hello world JavaScript file');
+console.log(response);
 ```
 
-## 🏗️ Relationship to Python MCP Agent
+## Core Classes
 
-This TypeScript implementation provides the same powerful patterns as the [Python mcp-agent](https://github.com/lastmile-ai/mcp-agent):
+### Agent
+```typescript
+const agent = new Agent({
+  name: string,
+  instructions: string,
+  llm: AugmentedLLM,
+  tools?: string[],
+  maxIterations?: number
+});
+```
 
-| Feature | Python mcp-agent | TypeScript mcp-agent |
-|---------|------------------|---------------------|
-| Anthropic Patterns | ✅ | ✅ |
-| MCP Integration | ✅ | ✅ |
-| Multi-LLM Support | ✅ | ✅ |
-| Workflow Composition | ✅ | ✅ |
-| Production Ready | ✅ | ✅ |
+### AugmentedLLM
+```typescript
+const llm = new AugmentedLLM(provider);
+await llm.generateResponse(prompt, tools);
+await llm.addMemory(memory);
+```
 
-## 📚 Documentation
+### Providers
+```typescript
+// OpenAI
+const openai = new OpenAIProvider({
+  apiKey: string,
+  model?: string,
+  temperature?: number,
+  maxTokens?: number
+});
 
-- [Getting Started Guide](./docs/GETTING_STARTED.md)
-- [API Reference](./docs/API_REFERENCE.md)
-- [Anthropic Patterns Guide](./docs/PATTERNS.md)
-- [Examples](./examples/)
+// Anthropic
+const anthropic = new AnthropicProvider({
+  apiKey: string,
+  model?: string,
+  temperature?: number,
+  maxTokens?: number
+});
+```
 
-## 🏗️ Status
+## Available Tools
 
-**Currently in development** - Building the TypeScript equivalent step by step!
+- **read_file** - Read file contents
+- **write_file** - Write content to files  
+- **list_directory** - List directory contents
+- **web_search** - Search the web (mock implementation)
+- **web_fetch** - Fetch web page content
+- **shell_command** - Execute shell commands
+- **node_script** - Run Node.js code
+- **http_request** - Make HTTP requests
 
-- ✅ Project foundation
-- 🔄 Core classes (in progress)
-- ⏳ Workflow patterns
-- ⏳ MCP integration
-- ⏳ Examples and documentation
+## Custom Tools
 
-## 🤝 Contributing
+```typescript
+import { BaseTool, ToolResult } from 'mcp-agent-ts';
+import { z } from 'zod';
 
-Help us build the definitive TypeScript MCP agent framework!
+class MyCustomTool extends BaseTool {
+  name = 'my_tool';
+  description = 'Does something custom';
+  parameters = z.object({
+    input: z.string()
+  });
 
-## 📄 License
+  async execute(params: any): Promise<ToolResult> {
+    // Your tool logic here
+    return { success: true, data: { result: 'done' } };
+  }
+}
 
-MIT - see [LICENSE](LICENSE) file for details.
+// Register with agent
+const toolRegistry = new ToolRegistry();
+toolRegistry.register(new MyCustomTool());
+```
+
+## Environment Variables
+
+```bash
+OPENAI_API_KEY=your_openai_api_key
+ANTHROPIC_API_KEY=your_anthropic_api_key  # optional
+```
+
+## Examples
+
+See the [examples](./src/examples/) directory for complete working examples.
+
+## TypeScript Support
+
+This package is built with TypeScript and includes full type definitions. No additional `@types` packages needed!
+
+## Contributing
+
+Contributions welcome! Please read our [Contributing Guide](./CONTRIBUTING.md).
+
+## License
+
+MIT License - see [LICENSE](./LICENSE) file.
+
+## Related
+
+- [Anthropic's Agent Patterns](https://docs.anthropic.com/en/docs/build-with-claude/agent-patterns)
+- [OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
+- [Model Context Protocol](https://modelcontextprotocol.io/)
+
+```bash
+# Build and test
+npm run build
+npm test
+```

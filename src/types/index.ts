@@ -5,6 +5,18 @@ export interface Memory {
   metadata?: Record<string, any>;
 }
 
+// Add these if the mock provider needs them
+export interface Message {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+export interface RequestParams {
+  temperature?: number;
+  maxTokens?: number;
+  [key: string]: any;
+}
+
 export interface ToolCall {
   name: string;
   parameters: any;

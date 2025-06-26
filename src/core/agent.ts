@@ -44,9 +44,12 @@ export class Agent {
     while (shouldContinue && this.iterationCount < this.maxIterations) {
       this.iterationCount++;
       
+      // Get tool schemas, not tool objects
+      const toolSchemas = this.getToolSchemas();
+      
       const response = await this.llm.generateResponse(
         this.buildPrompt(currentInput),
-        this.getAvailableTools()
+        toolSchemas  // Pass schemas, not tool objects
       );
 
       // Check if LLM wants to use tools
@@ -92,6 +95,19 @@ Current request: ${input}
 Think step by step. If you need to use tools, specify them clearly. If you have enough information to provide a final answer, do so.`;
   }
 
+  // NEW METHOD: Get tool schemas for LLM
+  private getToolSchemas() {
+    const allSchemas = this.toolRegistry.getToolSchemas();
+    
+    // Filter by enabled tools if specified
+    if (this.enabledTools.size > 0) {
+      return allSchemas.filter(schema => this.enabledTools.has(schema.name));
+    }
+    
+    return allSchemas;
+  }
+
+  // Keep this for getting tool objects for execution
   private getAvailableTools() {
     const allTools = this.toolRegistry.list();
     return allTools.filter(tool => 
